@@ -33,5 +33,7 @@ public class Instancia {
 	public void lerDados() {
 		// TODO: ler os csv's. CSV nada mais eh que um txt organizado, entao da pra ler
 		// normal. Essa função precisa peencher as variaveis herois, viloes e grafo!!
+		//Vou fazer essa parte aqui - André
+
 	}
 }
