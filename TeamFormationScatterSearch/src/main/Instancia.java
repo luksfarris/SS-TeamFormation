@@ -38,7 +38,6 @@ public class Instancia {
 	 */
 	public void lerDados() {
 		BufferedReader reader = null;
-		File file = new File("assetsmarvel_character-victorfc.csv");
 		String path = file.getAbsolutePath();
 		String dado = "";
 		String splitBy = ";";
