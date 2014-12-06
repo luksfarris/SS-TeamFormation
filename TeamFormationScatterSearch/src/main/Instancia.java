@@ -44,7 +44,7 @@ public class Instancia {
 		String splitBy = ";";
 		
 		try {
-			FileReader fr = new FileReader("C:\\Jowjow\\pathto\\marvel_character-victorfc.csv");
+			FileReader fr = new FileReader("C:\\pathto\\marvel_character-victorfc.csv");
 			reader = new BufferedReader(fr);
 			dado = reader.readLine();
 			while ((dado = reader.readLine()) != null) {
