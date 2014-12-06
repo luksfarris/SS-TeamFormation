@@ -66,7 +66,7 @@ public class Instancia {
 				}
 				else
 					novo.setHeroi(false);
-
+			personagens.add(novo);
 			}
 		}
 	  catch (FileNotFoundException e) {
