@@ -71,19 +71,20 @@ public class Instancia {
 				personagens.add(novo);
 			}
 		}
-	  catch (FileNotFoundException e) {
-		e.printStackTrace();
-	  } catch (IOException e) {
-		  e.printStackTrace();
-	  } finally {
-		  if (reader != null) {
+	 	catch (FileNotFoundException e) {
+			e.printStackTrace();
+		catch (IOException e) {
+			e.printStackTrace();
+		} 
+		finally {
+			if (reader != null) {
 				try {
 					reader.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-	  }
+		}
 	}
 
 }
