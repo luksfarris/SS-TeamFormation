@@ -46,7 +46,7 @@ public class Instancia {
 		//Character ID;Character Name;Hero or Villain;Intelligence;Strength;Speed;Durability;Energy Projection;Fighting Skills;Number of Comic Books Where Character Appeared
 		
 		try {
-			FileReader fr = new FileReader("C:\\Jowjow\\Java Workspace\\TeamFormation\\TeamFormationScatterSearch\\assets\\marvel_character-victorfc.csv");
+			FileReader fr = new FileReader("C:\\pathto\\marvel_character-victorfc.csv");
 			reader = new BufferedReader(fr);
 			dado = reader.readLine();
 			while ((dado = reader.readLine()) != null) {
