@@ -1,5 +1,6 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 import java.io.FileReader;
@@ -37,18 +38,20 @@ public class Instancia {
 	 * Le os arquivos de herois e do grafo, e cria as estruturas de dados.
 	 */
 	public void lerDados() {
+		personagens = new ArrayList<Personagem>();
 		BufferedReader reader = null;
-		String path = file.getAbsolutePath();
 		String dado = "";
 		String splitBy = ";";
 		
+		//Character ID;Character Name;Hero or Villain;Intelligence;Strength;Speed;Durability;Energy Projection;Fighting Skills;Number of Comic Books Where Character Appeared
+		
 		try {
-			FileReader fr = new FileReader("C:\\pathto\\marvel_character-victorfc.csv");
+			FileReader fr = new FileReader("C:\\Jowjow\\Java Workspace\\TeamFormation\\TeamFormationScatterSearch\\assets\\marvel_character-victorfc.csv");
 			reader = new BufferedReader(fr);
 			dado = reader.readLine();
 			while ((dado = reader.readLine()) != null) {
 	 
-				String[] dados = dado.split(splitBy); 
+				String[] dados = dado.split(splitBy); //1;comet;hero;1;1;1;1;1;1;9
 				
 				Personagem novo = new Personagem();
 				novo.setId(Integer.parseInt(dados[0]));
@@ -60,12 +63,12 @@ public class Instancia {
 				novo.setPowerGrid(6, Integer.parseInt(dados[8]));
 				novo.setPopularidade(Integer.parseInt(dados[9]));
 
-				if(dados[2].equals("Hero")){
+				if(dados[2].equals("hero")){
 					novo.setHeroi(true);
 				}
 				else
 					novo.setHeroi(false);
-			personagens.add(novo);
+				personagens.add(novo);
 			}
 		}
 	  catch (FileNotFoundException e) {
