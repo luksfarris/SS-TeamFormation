@@ -31,9 +31,48 @@ public class Solucao {
 	/**
 	 * Calcula o budget da solução corrente.
 	 */
-	private double calculaBudget (int[] viloes, Instancia instancia) {
-		// TODO: calcula o budget usando funcao enviada por email pelo professor.
-		return 0;
+	private double calculaBudget (Instancia instancia) {
+		// calcula o budget usando funcao enviada por email pelo professor.
+		double exp1 = 0;
+		double exp2 = 0;
+		double powerGridHerois = 0; // calcula o power grid medio dos herois
+		double popularidadeHerois = 0;
+		for (Personagem p : listaDeHerois) {
+			for (int i=0; i<6; i++) {
+				powerGridHerois += (p.getPowerGrid()[i] / listaDeHerois.size());
+			}
+			popularidadeHerois += p.getPopularidade() / listaDeHerois.size();
+		}
+		double powerGridViloes = 0;
+		double popularidadeViloes = 0;
+		double vtCost = 0;
+		for (int id : instancia.viloes) {
+			Personagem p = instancia.personagens.get(id);
+			for (int i=0; i<6; i++) {
+				powerGridViloes += (p.getPowerGrid()[i] / instancia.viloes.length);
+				vtCost += (p.getPowerGrid()[i]/6) * p.getPopularidade();
+			}
+			popularidadeViloes += p.getPopularidade() / instancia.viloes.length;
+		}
+		double ratioPG = powerGridHerois/powerGridViloes;
+		double ratioPop = popularidadeHerois/popularidadeViloes;
+		
+		double powerGridTodosViloes = 0;
+		int quantidadeViloes = 0;
+		for (Personagem p : instancia.personagens) {
+			if (!p.isHeroi()){
+				quantidadeViloes ++;
+				for(int i=0 ; i< 6; i++){
+					powerGridTodosViloes += p.getPowerGrid()[i];
+				}
+			}
+		}
+		powerGridTodosViloes /= quantidadeViloes;
+		double factor = powerGridViloes / powerGridTodosViloes;
+		
+		exp1 = ratioPG * ratioPop * vtCost;
+		exp2 = factor * powerGridHerois * popularidadeHerois * instancia.viloes.length;
+		return Math.max(exp1, exp2);
 	}
 	
 	/**
@@ -44,7 +83,7 @@ public class Solucao {
 	public boolean factível (Instancia instancia) {
 		return (listaDeHerois.size() >= instancia.minHerois 
 				&& listaDeHerois.size() <= instancia.maxHerois
-				&& calculaBudget(instancia.viloes, instancia) < instancia.budget);
+				&& calculaBudget(instancia) < instancia.budget);
 	}
 	
 	/**
