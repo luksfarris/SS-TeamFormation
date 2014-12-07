@@ -1,6 +1,8 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,8 +38,41 @@ public class ScatterSearch {
 	 * ou <code>false</code> se o conjunto continuou igual.
 	 */
 	private boolean atualizaConjuntoReferencia () {
-		// TODO: atualiza o conjunto referencia com os N melhores resultados.
-		return false;
+		// atualiza o conjunto referencia com os N melhores resultados.
+		boolean setChanged = false;
+		Solucao lastBestSolution = null;
+		if (refSet.size() == tamanhoRefSet) {
+			lastBestSolution = refSet.get(tamanhoRefSet-1);
+		}
+		if (lastBestSolution !=null) {
+			double mark = lastBestSolution.avalia(instancia);
+			for (Solucao s : populacao) {
+				if (!refSet.contains(s)) {
+					if (s.avalia(instancia) > mark){
+						setChanged = true;
+						break;
+					}
+				}
+			}
+		} else {
+			setChanged = true;
+		}
+		
+		// ordena a populacao.
+		Collections.sort(populacao, new Comparator<Solucao>() {
+			@Override
+			public int compare(Solucao o1, Solucao o2) {
+				return Double.valueOf(o1.avalia(instancia)).compareTo(Double.valueOf(o2.avalia(instancia)));
+			}
+		});
+		
+		// pega os N ultimos
+		refSet.clear();
+		for (int i = populacao.size()-tamanhoRefSet; i < populacao.size(); i++) {
+			refSet.add(populacao.get(i));
+		}
+		
+		return setChanged;
 	}
 	
 	/**
