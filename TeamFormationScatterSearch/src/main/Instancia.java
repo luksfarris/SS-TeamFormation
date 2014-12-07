@@ -47,15 +47,16 @@ public class Instancia {
 		BufferedReader reader = null;
 		String dado = "";
 		String splitBy = ";";
-		grafo = new double[personagens.size()][personagens.size()];
+		grafo = new double[personagens.size()+1][personagens.size()+1];
 			
 		try {
-			FileReader fr = new FileReader("C:\\pathto\\shared_comic_books-victorfc.csv");
+			FileReader fr = new FileReader("assets/shared_comic_books-victorfc.csv");
 			reader = new BufferedReader(fr);
 			dado = reader.readLine();
 			while ((dado = reader.readLine()) != null) {
 	 
 				String[] dados = dado.split(splitBy); //1;comet;hero;1;1;1;1;1;1;
+				System.out.println(dado);
 				grafo[Integer.parseInt(dados[0])][Integer.parseInt(dados[1])]=Integer.parseInt(dados[2]);
 				grafo[Integer.parseInt(dados[1])][Integer.parseInt(dados[0])]=Integer.parseInt(dados[2]);
 
@@ -86,7 +87,7 @@ public class Instancia {
 		String splitBy = ";";
 		
 		try {
-			FileReader fr = new FileReader("C:\\pathto\\marvel_character-victorfc.csv");
+			FileReader fr = new FileReader("assets/marvel_character-victorfc.csv");
 			reader = new BufferedReader(fr);
 			dado = reader.readLine();
 			while ((dado = reader.readLine()) != null) {
