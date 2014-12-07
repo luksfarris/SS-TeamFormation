@@ -92,9 +92,22 @@ public class Solucao {
 	 * da solocao e os viloes da instancia.
 	 * @return o valor calculado da solucao.
 	 */
-	public double avalia() {
-		// TODO: calcula o valor dessa solucao.
-		return 0;
+	public double avalia(Instancia instancia) {
+		// calcula o valor dessa solucao.
+		double valor = 0;
+		for (Personagem p : listaDeHerois) {
+			// soma a colaboracao com os outros herois do time
+			for (Personagem q : listaDeHerois) {
+				if (p.getId() != q.getId()) {
+					valor += instancia.grafo[p.getId()][q.getId()];
+				}
+			}
+			// soma as arestas com os viloes
+			for (int vId : instancia.viloes) {				
+				valor += instancia.grafo[p.getId()][vId];
+			}
+		}
+		return valor;
 	}
 	
 }
