@@ -16,6 +16,10 @@ public class Personagem {
 	/** identificador unico de cada personagem. */
 	private int id;
 
+	public Personagem(){
+		powerGrid = new int[6];
+	}
+
 	public int[] getPowerGrid() {
 		return powerGrid;
 	}
@@ -26,7 +30,7 @@ public class Personagem {
 	 * @param value novo valor do poder.
 	 */
 	public void setPowerGrid(int position, int value) {
-		powerGrid[position] = value;
+		powerGrid[position-1] = value;
 	}
 
 	public int getPopularidade() {
