@@ -38,12 +38,52 @@ public class Instancia {
 	 * Le os arquivos de herois e do grafo, e cria as estruturas de dados.
 	 */
 	public void lerDados() {
+		lePersonagens();
+		leGrafo(personagens.size());
+		
+	}
+	
+	public void leGrafo(int size){
+		BufferedReader reader = null;
+		String dado = "";
+		String splitBy = ";";
+		grafo = new double[personagens.size()][personagens.size()];
+			
+		try {
+			FileReader fr = new FileReader("C:\\pathto\\shared_comic_books-victorfc.csv");
+			reader = new BufferedReader(fr);
+			dado = reader.readLine();
+			while ((dado = reader.readLine()) != null) {
+	 
+				String[] dados = dado.split(splitBy); //1;comet;hero;1;1;1;1;1;1;
+				grafo[Integer.parseInt(dados[0])][Integer.parseInt(dados[1])]=Integer.parseInt(dados[2]);
+				grafo[Integer.parseInt(dados[1])][Integer.parseInt(dados[0])]=Integer.parseInt(dados[2]);
+
+			}
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		} 
+		finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public void lePersonagens(){
+
 		personagens = new ArrayList<Personagem>();
 		BufferedReader reader = null;
 		String dado = "";
 		String splitBy = ";";
-		
-		//Character ID;Character Name;Hero or Villain;Intelligence;Strength;Speed;Durability;Energy Projection;Fighting Skills;Number of Comic Books Where Character Appeared
 		
 		try {
 			FileReader fr = new FileReader("C:\\pathto\\marvel_character-victorfc.csv");
@@ -71,8 +111,9 @@ public class Instancia {
 				personagens.add(novo);
 			}
 		}
-	 	catch (FileNotFoundException e) {
+		catch (FileNotFoundException e) {
 			e.printStackTrace();
+		}
 		catch (IOException e) {
 			e.printStackTrace();
 		} 
@@ -80,11 +121,11 @@ public class Instancia {
 			if (reader != null) {
 				try {
 					reader.close();
-				} catch (IOException e) {
+				} 
+				catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		}
 	}
-
 }
