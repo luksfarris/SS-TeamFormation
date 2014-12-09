@@ -1,10 +1,11 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Solucao {
 
-	List<Personagem> listaDeHerois;
+	List<Personagem> listaDeHerois = new ArrayList<Personagem>();
 	
 	/**
 	 * Heuristica gulosa ou aleatoria, ou os dois, que tenta caminhar pra
@@ -109,5 +110,11 @@ public class Solucao {
 		}
 		return valor;
 	}
+
+	@Override
+	public String toString() {
+		return "Solucao [listaDeHerois=" + listaDeHerois + "]";
+	}
+	
 	
 }

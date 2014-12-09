@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Arrays;
+
 /**
  * @author Lucas Farris
  * Classe que representa um heroi.
@@ -16,9 +18,19 @@ public class Personagem {
 	/** identificador unico de cada personagem. */
 	private int id;
 
+	
 	public Personagem(){
 		powerGrid = new int[6];
 	}
+
+	@Override
+	public String toString() {
+		return "Personagem [heroi=" + heroi + ", powerGrid="
+				+ Arrays.toString(powerGrid) + ", popularidade=" + popularidade
+				+ ", id=" + id + "]";
+	}
+
+
 
 	public int[] getPowerGrid() {
 		return powerGrid;

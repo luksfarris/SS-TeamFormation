@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 public class ScatterSearch {
 
@@ -17,7 +18,6 @@ public class ScatterSearch {
 	/** Conjunto total de solucoes. */
 	List<Solucao> populacao;
 	
-	
 	/**
 	 * Construtor.
 	 * @param instancia instancia do problema que queremos encontrar uma solucao.
@@ -27,8 +27,8 @@ public class ScatterSearch {
 		this.instancia = instancia;
 		this.tamanhoRefSet = tamanhoRefSet;
 		
-		refSet = new ArrayList<>(tamanhoRefSet);
-		populacao = new ArrayList<>(tamanhoRefSet*10);
+		refSet = new ArrayList<Solucao>(tamanhoRefSet);
+		populacao = new ArrayList<Solucao>(tamanhoRefSet*10);
 	}
 	
 	/**
@@ -79,24 +79,145 @@ public class ScatterSearch {
 	 * Gera uma populacao de um determinado tamanho, com individuos da maneira mais
 	 * variada possivel.
 	 * @param tamanho tamanho total da populacao.
+	 * 
+	 * @author ivan
 	 */
-	private List<Solucao> gerarPopulacao(int tamanho) {
+	public List<Solucao> gerarPopulacao(int tamanho) {
+		List<Solucao> solucoes = new ArrayList<Solucao>();
+		Random sorteiaTamanhoTime = new Random();
 		// TODO: gera um conjunto de solucoes. Quanto mais variados forem as
 		// solucoes, melhor sera o algoritmo. NAO ESQUECER de chamar melhora()
 		// em cada solucao gerada!!!
-		return null;
+		while(solucoes.size() < tamanho){
+			//sorteia o tamanho do time a ser gerado, devendo estar entre minHerois e maxHerois.
+			int tamanhoTime = sorteiaTamanhoTime.nextInt(this.instancia.maxHerois - this.instancia.minHerois) + this.instancia.minHerois;
+			//gera uma nova solucao aleatoriamente composta
+			Solucao novaSolucaoInicial = geraNovaSolucaoInicial(tamanhoTime);
+			//TODO IMPROVE THIS
+			solucoes.add(novaSolucaoInicial);
+		}
+		return solucoes;
 	}
 	
 	/**
 	 * Gera os subconjuntos para serem combinados. Cada subconjunto deve ter metade
 	 * das solucoes vindo do conjunto referencia, e metade do resto (pode ser aleatorio).
 	 * @return lista de subconjuntos gerados.
+	 * 
+	 * @author ivan
 	 */
-	private List<SubConjunto> geraSubconjuntos () {
-		// TODO: gerar os subconjuntos.
-		return null;
+	public List<SubConjunto> geraSubconjuntos () {
+		//gera um novo conjunto de solucoes a partir do refset com metade das melhores solucoes do ref set atual e a outra metade eh pega aleatoriamente ou substitui uma solucao do ref set se for melhor 
+		//NAO ATUALIZA o ref set
+		List<Solucao> solucoesParaSubconjuntos = refinaRefSet();
+		List<SubConjunto> listaSubconjuntos = new ArrayList<SubConjunto>();
+		//inicializa lista de subconjuntos
+		for(int i=0; i<4; i++) {
+			SubConjunto s = new SubConjunto();
+			s.solucoes = new ArrayList<Solucao>();
+			listaSubconjuntos.add(s);
+		}
+		//distribuindo as solucoes entre os subconjuntos
+		for(int i=0; i< solucoesParaSubconjuntos.size(); i++){
+			listaSubconjuntos.get(i%4).solucoes.add(solucoesParaSubconjuntos.get(i));
+		}
+		return listaSubconjuntos;
 	}
 	
+	private List<Solucao> refinaRefSet(){
+		int numSubdivisoes = 4;
+		/* 
+		 * O conjunto de referencia esta sempre ordenado quando esse metodo eh chamado. 
+		 * Dividimos o conj de referencia em 4 partes; de 0 a tamanhoRefSet/4 - 1, sao as piores solucoes;
+		 * as substituimos por solucoes aleatoriamente selecionadas da populacao 
+		 * de tamanhoRefSet/4 a tamanhoRefSet/2 -1, substituimos por solucoes aleatoriamente selecionadas da
+		 * populacao somente se o budget da solucao a ser incluida eh maior que o corrente;
+		 * Os demais setores mantem as solucoes do conj de referencia atual
+		 */
+		List<Solucao> referenciaAlterado = new ArrayList<Solucao>();
+		Random sorteiaDaPopulacao = new Random();
+		int tamanhoPopulacao = populacao.size();
+		for(int i=0; i<tamanhoRefSet; i++){
+			if (i<(tamanhoRefSet/4)){
+				int solucaoIndex= sorteiaDaPopulacao.nextInt(tamanhoPopulacao);
+				//enquanto a solucao nao for uma que nao esta no refSet continua sorteando
+				while(!estaNoRefSet(populacao.get(solucaoIndex))){
+					solucaoIndex= sorteiaDaPopulacao.nextInt(tamanhoPopulacao);
+				}
+				//substitui pela solucao sorteada
+				referenciaAlterado.add(populacao.get(solucaoIndex));
+			}
+			else if(i>=tamanhoRefSet/4 && i<tamanhoRefSet/2){
+				int solucaoIndex= sorteiaDaPopulacao.nextInt(tamanhoPopulacao);
+				//enquanto a solucao nao for uma que nao esta no refSet continua sorteando
+				while(!estaNoRefSet(populacao.get(solucaoIndex))){
+					solucaoIndex= sorteiaDaPopulacao.nextInt(tamanhoPopulacao);
+				}
+				//se solucao sorteada eh mais vantajosa substitui
+				if(populacao.get(solucaoIndex).avalia(instancia) > populacao.get(i).avalia(instancia)){
+					referenciaAlterado.add(populacao.get(solucaoIndex));
+				}else{
+					//senao mantem a antiga
+					referenciaAlterado.add(populacao.get(i));
+				}
+			}
+			else{
+				//mantem as melhores solucoes do conj referencia
+				referenciaAlterado.add(populacao.get(i));
+			}
+			//reordena o novo refSet
+			Collections.sort(referenciaAlterado, new Comparator<Solucao>() {
+				@Override
+				public int compare(Solucao o1, Solucao o2) {
+					return Double.valueOf(o1.avalia(instancia)).compareTo(Double.valueOf(o2.avalia(instancia)));
+				}
+			});
+			
+		}
+		return referenciaAlterado;
+	}
+	
+
+	/**
+	 * Gera UMA solucao para constituir uma populacao, sorteando aleatoriamente um time de herois de tamanho = tamanhoTime 
+	 * 
+	 * @param tamanhoTime - tamanho do time de herois a ser gerado na solucao
+	 * @return Solucao
+	 * 
+	 * @author ivan
+	 */
+	private Solucao geraNovaSolucaoInicial(int tamanhoTime){
+		Solucao novaSolucao = new Solucao();
+		Random sorteiaHeroi = new Random();
+		int[] heroisSorteados = new int[tamanhoTime];
+		//inicializa com um valor que nao pode ser indice
+		for(int i=0; i< heroisSorteados.length; i++){
+			heroisSorteados[i] = -1;
+		}
+		int numHeroisValidosSorteados = 0;
+		while(numHeroisValidosSorteados < tamanhoTime){
+			int personagemIndex = 0;
+			boolean diferente = true;
+			repLoop: while(diferente){
+				//sorteia um heroi
+				personagemIndex= sorteiaHeroi.nextInt(this.instancia.maxHeroIndex);
+				//verifica se ja foi sorteado
+				for(int i : heroisSorteados){
+					//se ja foi sorteado,volta para sortear outro
+					if(i == personagemIndex) continue repLoop;
+				}
+				diferente = false;
+			}
+			//nao eh repetido: adiciona ele na lista
+			heroisSorteados[numHeroisValidosSorteados] = personagemIndex;
+			numHeroisValidosSorteados++;
+		}
+		//adiciona os personagens na lista de herois da solucao
+		for(int i=0; i<heroisSorteados.length; i++){
+			novaSolucao.listaDeHerois.add(this.instancia.personagens.get(heroisSorteados[i]));
+		}
+		return novaSolucao;
+	}
 	
 	/**
 	 * Algoritmo Scatter Search. Metaheuristica que ira procurar a solucao mais proxima
@@ -131,6 +252,17 @@ public class ScatterSearch {
 		}
 		
 		return refSet.get(0);
+	}
+	
+	/**
+	 * Retorna se a solucao ocntem o personagem dado.
+	 * @param personagem
+	 * @return boolean
+	 * 
+	 * @author ivan
+	 */
+	public boolean estaNoRefSet(Solucao solucao){
+		return this.populacao.contains(solucao);
 	}
 	
 	/**

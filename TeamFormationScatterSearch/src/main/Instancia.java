@@ -15,7 +15,11 @@ public class Instancia {
 	
 	/** conjunto de N herois e de M viloes com tamanho N+M. */
 	List<Personagem> personagens;
-	
+	/** na lista de personagens, todos os herois sao listados primeiro, e depois todos os viloes. 
+	 *  Esta variavel guarda o indice maximo onde podemos encontrar um heroi, para nao sortear viloes
+	 *  desnecessariamente
+	 */
+	int maxHeroIndex = 0;
 	/** Ids do grupo de viloes que queremos derrotar.*/
 	int viloes[];
 	/** grafo onde os valores de 0 a N representam vertices de herois, e os vertices de 
@@ -27,6 +31,7 @@ public class Instancia {
 	int minHerois;
 	/** Budget maximo. */
 	double budget;
+	
 	
 
 	public Instancia() {
@@ -55,7 +60,6 @@ public class Instancia {
 			while ((dado = reader.readLine()) != null) {
 	 
 				String[] dados = dado.split(splitBy); //1;comet;hero;1;1;1;1;1;1;
-				System.out.println(dado);
 				grafo[Integer.parseInt(dados[0])][Integer.parseInt(dados[1])]=Integer.parseInt(dados[2]);
 				grafo[Integer.parseInt(dados[1])][Integer.parseInt(dados[0])]=Integer.parseInt(dados[2]);
 
@@ -106,8 +110,14 @@ public class Instancia {
 				if(dados[2].equals("hero")){
 					novo.setHeroi(true);
 				}
-				else
+				else{
 					novo.setHeroi(false);
+					//primeiro vilao encontrado
+					if(this.maxHeroIndex == 0){
+						//o maximo indice de herois eh o tamanho corrente da lista de personagens - 1
+						this.maxHeroIndex = personagens.size() - 1;
+					}
+				}	
 				personagens.add(novo);
 			}
 		}
