@@ -6,6 +6,7 @@ import java.util.List;
 public class Solucao {
 
 	List<Personagem> listaDeHerois = new ArrayList<Personagem>();
+	double valor = -1;
 	
 	/**
 	 * Heuristica gulosa ou aleatoria, ou os dois, que tenta caminhar pra
@@ -50,8 +51,8 @@ public class Solucao {
 		for (int id : instancia.viloes) {
 			Personagem p = instancia.personagens.get(id);
 			for (int i=0; i<6; i++) {
-				powerGridViloes += (p.getPowerGrid()[i] / instancia.viloes.length);
-				vtCost += (p.getPowerGrid()[i]/6) * p.getPopularidade();
+				powerGridViloes += ((double) p.getPowerGrid()[i] / (double) instancia.viloes.length);
+				vtCost += (p.getPowerGrid()[i]/6.0) * p.getPopularidade();
 			}
 			popularidadeViloes += p.getPopularidade() / instancia.viloes.length;
 		}
@@ -88,6 +89,31 @@ public class Solucao {
 	}
 	
 	/**
+	 * Determina se o conjunto de herois da solucao eh capaz de derrotar os viloes.
+	 * @param instancia .
+	 * @return Se o powergrid dos herois eh maior que o dos viloes.
+	 */
+	public boolean viavel (Instancia instancia) {
+		int viloesPG[] = new int[6];
+		int heroisPG[] = new int[6];
+		boolean viavel = true;
+		for (int i=0;i<6;i++){
+			for (int v=0; v<instancia.viloes.length;v++) {
+				Personagem vilao = instancia.personagens.get(v);
+				viloesPG[i] += vilao.getPowerGrid()[i];
+			}
+			for (Personagem p : listaDeHerois) {
+				heroisPG[i] += p.getPowerGrid()[i];
+			}
+			
+			if (viloesPG[i] > heroisPG[i]) {
+				return false;
+			}
+		}		
+		return viavel;
+	}
+	
+	/**
 	 * Realiza o calculo do valor da solucao. O valor eh calculado pela soma das
 	 * arestas entre todos os herois da solucao mais as arestas e entre os herois
 	 * da solocao e os viloes da instancia.
@@ -95,17 +121,26 @@ public class Solucao {
 	 */
 	public double avalia(Instancia instancia) {
 		// calcula o valor dessa solucao.
-		double valor = 0;
-		for (Personagem p : listaDeHerois) {
-			// soma a colaboracao com os outros herois do time
-			for (Personagem q : listaDeHerois) {
-				if (p.getId() != q.getId()) {
-					valor += instancia.grafo[p.getId()][q.getId()];
+		if (valor < 0) {
+			valor = 0;
+			// se a solucao nem for solucao, o valor sera zero.
+			if (viavel(instancia)) {
+				for (Personagem p : listaDeHerois) {
+					// soma a colaboracao com os outros herois do time
+					for (Personagem q : listaDeHerois) {
+						if (p.getId() != q.getId()) {
+							valor += instancia.grafo[p.getId()][q.getId()];
+						}
+					}
+					// soma as arestas com os viloes
+					for (int vId : instancia.viloes) {				
+						valor += instancia.grafo[p.getId()][vId];
+					}
 				}
 			}
-			// soma as arestas com os viloes
-			for (int vId : instancia.viloes) {				
-				valor += instancia.grafo[p.getId()][vId];
+			// se a solucao nao for factivel, dividimos o valor por 2
+			if (!factível(instancia)) {
+				valor /=2;
 			}
 		}
 		return valor;
@@ -116,5 +151,9 @@ public class Solucao {
 		return "Solucao [listaDeHerois=" + listaDeHerois + "]";
 	}
 	
+	
+	public void setValor(double valor) {
+		this.valor = valor;
+	}
 	
 }

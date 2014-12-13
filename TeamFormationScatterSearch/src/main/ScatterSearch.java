@@ -85,7 +85,7 @@ public class ScatterSearch {
 	public List<Solucao> gerarPopulacao(int tamanho) {
 		List<Solucao> solucoes = new ArrayList<Solucao>();
 		Random sorteiaTamanhoTime = new Random();
-		// TODO: gera um conjunto de solucoes. Quanto mais variados forem as
+		// gera um conjunto de solucoes. Quanto mais variados forem as
 		// solucoes, melhor sera o algoritmo. NAO ESQUECER de chamar melhora()
 		// em cada solucao gerada!!!
 		while(solucoes.size() < tamanho){
@@ -125,7 +125,6 @@ public class ScatterSearch {
 	}
 	
 	private List<Solucao> refinaRefSet(){
-		int numSubdivisoes = 4;
 		/* 
 		 * O conjunto de referencia esta sempre ordenado quando esse metodo eh chamado. 
 		 * Dividimos o conj de referencia em 4 partes; de 0 a tamanhoRefSet/4 - 1, sao as piores solucoes;
@@ -226,7 +225,7 @@ public class ScatterSearch {
 	 * @return a Solucao encontrada. Pode nao ser factivel.
 	 */
 	public Solucao busca () {
-		populacao.addAll(gerarPopulacao(tamanhoRefSet));
+		populacao.addAll(gerarPopulacao(tamanhoRefSet*10));
 		atualizaConjuntoReferencia();
 		
 		boolean novasSolucoes = true;

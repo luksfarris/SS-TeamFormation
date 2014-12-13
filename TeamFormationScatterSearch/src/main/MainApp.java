@@ -6,8 +6,8 @@ public class MainApp {
 		
 		Instancia instancia = new Instancia();
 		instancia.budget = Double.MAX_VALUE;
-		instancia.minHerois = 1;
-		instancia.maxHerois = 99;
+		instancia.minHerois = 3;
+		instancia.maxHerois = 10;
 		int viloes[] = {763, 627};
 		instancia.viloes = viloes;
 		
