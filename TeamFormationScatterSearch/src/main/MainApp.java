@@ -1,9 +1,6 @@
 package main;
 
 public class MainApp {
-
-	int viloes[] = {763, 627};
-
 	
 	public static int[] getViloes(int instancia) {
 
@@ -48,13 +45,13 @@ public class MainApp {
 		
 		Instancia instancia = new Instancia();
 		instancia.budget = Double.MAX_VALUE;
-		int viloes[] = getViloes(0);
+		int viloes[] = getViloes(9);
 		instancia.minHerois = 1;
 		instancia.maxHerois = viloes.length + 1;
 		instancia.viloes = viloes;
 		
 		ScatterSearch search = new ScatterSearch(instancia, 20);
-		Solucao solucao = search.busca(1000);
+		Solucao solucao = search.busca(2000);
 		if (solucao != null) {
 			System.out.println("Melhor solução encontrada tem valor " + solucao.avalia(instancia));
 			System.out.println("S = " + solucao);

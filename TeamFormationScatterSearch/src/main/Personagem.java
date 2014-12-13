@@ -68,4 +68,14 @@ public class Personagem {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		boolean equal = false;
+		if (getClass().equals(obj.getClass())){
+			Personagem p = (Personagem) obj;
+			equal = (getId() == p.getId());
+		}
+		return equal;
+	}
 }

@@ -37,18 +37,18 @@ public class Solucao {
 					Solucao st = new Solucao();
 					Solucao ts = new Solucao();
 					for (int l=0; l<k ; l++) {
-						if (l < s.listaDeHerois.size()) {
+						if (l < s.listaDeHerois.size() && !st.listaDeHerois.contains(s.listaDeHerois.get(l))) {
 							st.listaDeHerois.add(s.listaDeHerois.get(l));
 						}
-						if (l < t.listaDeHerois.size()) {
+						if (l < t.listaDeHerois.size() && !ts.listaDeHerois.contains(t.listaDeHerois.get(l))) {
 							ts.listaDeHerois.add(t.listaDeHerois.get(l));
 						}
 					}
 					for (int l=k; l<Math.max(s.listaDeHerois.size(), t.listaDeHerois.size()) ; l++) {
-						if (l < t.listaDeHerois.size()) {
+						if (l < t.listaDeHerois.size() && !st.listaDeHerois.contains(t.listaDeHerois.get(l))) {
 							st.listaDeHerois.add(t.listaDeHerois.get(l));
 						}
-						if (l < s.listaDeHerois.size()) {
+						if (l < s.listaDeHerois.size() && !ts.listaDeHerois.contains(s.listaDeHerois.get(l))) {
 							ts.listaDeHerois.add(s.listaDeHerois.get(l));
 						}
 					}
@@ -184,7 +184,12 @@ public class Solucao {
 
 	@Override
 	public String toString() {
-		return "Solucao [listaDeHerois=" + listaDeHerois + "]";
+		String saida = "[";
+		for (Personagem p : listaDeHerois) {
+			saida = saida + p.getId() + " ";
+		}
+		saida = saida + "]";
+		return saida;
 	}
 	
 	

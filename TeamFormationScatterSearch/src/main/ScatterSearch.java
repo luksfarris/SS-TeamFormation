@@ -232,7 +232,6 @@ public class ScatterSearch {
 		atualizaConjuntoReferencia();
 		
 		for (int k=0; k < iteracoes; k++) {
-			System.out.println("Iteração " + k + " - Best: " + refSet.get(refSet.size()-1).valor);
 			List<SubConjunto> subconjuntos = geraSubconjuntos();
 			Iterator<SubConjunto> it = subconjuntos.iterator();
 			while (it.hasNext()) {
@@ -245,7 +244,7 @@ public class ScatterSearch {
 				}
 			}
 			if (atualizaConjuntoReferencia()) {
-				System.out.println("refset mudou");
+				System.out.println("Iteração " + k + " - Best: " + refSet.get(refSet.size()-1).valor);
 			}
 			// remove os piores elementos
 			Iterator<Solucao> pop = populacao.iterator();
