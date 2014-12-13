@@ -25,9 +25,43 @@ public class Solucao {
 	 * @param solucoes conjunto de solucoes que sera combinado.
 	 * @return combinacao de pelo menos uma solucao gerada.
 	 */
-	public static List<Solucao> geraNovasSolucoes (List<Solucao> solucoes) {
-		// TODO: quanto melhor for a combinacao de solucoes, melhor sera o algoritmo.
-		return null;
+	public static List<Solucao> geraNovasSolucoes (List<Solucao> solucoes, Instancia instancia) {
+		// quanto melhor for a combinacao de solucoes, melhor sera o algoritmo.
+		// Do jeito que implementei, ele combina de todas as maneiras possiveis, sem muita inteligencia.
+		List<Solucao> novasSolucoes = new ArrayList<Solucao>();
+		for (int i = 0; i < solucoes.size(); i++) {
+			for (int j = i+1; j < solucoes.size(); j++) {
+				Solucao s = solucoes.get(i);
+				Solucao t = solucoes.get(j);
+				for (int k = 0; k < Math.max(s.listaDeHerois.size(), t.listaDeHerois.size()); k++){
+					Solucao st = new Solucao();
+					Solucao ts = new Solucao();
+					for (int l=0; l<k ; l++) {
+						if (l < s.listaDeHerois.size()) {
+							st.listaDeHerois.add(s.listaDeHerois.get(l));
+						}
+						if (l < t.listaDeHerois.size()) {
+							ts.listaDeHerois.add(t.listaDeHerois.get(l));
+						}
+					}
+					for (int l=k; l<Math.max(s.listaDeHerois.size(), t.listaDeHerois.size()) ; l++) {
+						if (l < t.listaDeHerois.size()) {
+							st.listaDeHerois.add(t.listaDeHerois.get(l));
+						}
+						if (l < s.listaDeHerois.size()) {
+							ts.listaDeHerois.add(s.listaDeHerois.get(l));
+						}
+					}
+					if (st.viavel(instancia) && !solucoes.contains(st)){
+						novasSolucoes.add(st);
+					}
+					if (ts.viavel(instancia) && !solucoes.contains(ts)){
+						novasSolucoes.add(ts);
+					}
+				}
+			}
+		}
+		return novasSolucoes;
 	}
 	
 	/**
@@ -154,6 +188,27 @@ public class Solucao {
 	
 	public void setValor(double valor) {
 		this.valor = valor;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		boolean equal = false;
+		if (obj.getClass().equals(getClass())) {
+			Solucao l = (Solucao) obj;
+			boolean sameIds = true;
+			if (listaDeHerois.size() == l.listaDeHerois.size()) {
+				for (int i=0; i <listaDeHerois.size();i++){
+					if (listaDeHerois.get(i).getId() != l.listaDeHerois.get(i).getId()){
+						sameIds = false;
+						break;
+					}
+				}
+			} else {
+				sameIds = false;
+			}
+			equal = sameIds;
+		}
+		return equal;
 	}
 	
 }

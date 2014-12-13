@@ -28,7 +28,7 @@ public class ScatterSearch {
 		this.tamanhoRefSet = tamanhoRefSet;
 		
 		refSet = new ArrayList<Solucao>(tamanhoRefSet);
-		populacao = new ArrayList<Solucao>(tamanhoRefSet*10);
+		populacao = new ArrayList<Solucao>();
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class ScatterSearch {
 		boolean setChanged = false;
 		Solucao lastBestSolution = null;
 		if (refSet.size() == tamanhoRefSet) {
-			lastBestSolution = refSet.get(tamanhoRefSet-1);
+			lastBestSolution = refSet.get(0);
 		}
 		if (lastBestSolution !=null) {
 			double mark = lastBestSolution.avalia(instancia);
@@ -93,8 +93,11 @@ public class ScatterSearch {
 			int tamanhoTime = sorteiaTamanhoTime.nextInt(this.instancia.maxHerois - this.instancia.minHerois) + this.instancia.minHerois;
 			//gera uma nova solucao aleatoriamente composta
 			Solucao novaSolucaoInicial = geraNovaSolucaoInicial(tamanhoTime);
+			
 			//TODO IMPROVE THIS
-			solucoes.add(novaSolucaoInicial);
+			if (novaSolucaoInicial.viavel(instancia) && !solucoes.contains(novaSolucaoInicial)) {
+				solucoes.add(novaSolucaoInicial);
+			}
 		}
 		return solucoes;
 	}
@@ -235,22 +238,22 @@ public class ScatterSearch {
 			Iterator<SubConjunto> it = subconjuntos.iterator();
 			while (it.hasNext()) {
 				SubConjunto subconjunto = (SubConjunto) it.next();
-				List<Solucao> solucoesGeradas = Solucao.geraNovasSolucoes(subconjunto.solucoes);
+				List<Solucao> solucoesGeradas = Solucao.geraNovasSolucoes(subconjunto.solucoes, instancia);
 				for (int i=0 ; i < solucoesGeradas.size() ; i++) {
 					Solucao solucao = solucoesGeradas.get(i);
 					solucao.melhoraSolucao(instancia);
 					populacao.add(solucao);
 				}
-				
-				if (atualizaConjuntoReferencia()) {
-					novasSolucoes = true;
-				}
-				
-				it.remove();
+			}
+			if (atualizaConjuntoReferencia()) {
+				novasSolucoes = true;
 			}
 		}
-		
-		return refSet.get(0);
+		if (refSet.size() > 0) {
+			return refSet.get(refSet.size()-1);
+		} else {
+			return null;
+		}
 	}
 	
 	/**
