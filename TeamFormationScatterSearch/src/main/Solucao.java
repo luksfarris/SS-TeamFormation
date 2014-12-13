@@ -159,9 +159,11 @@ public class Solucao {
 			valor = 0;
 			// se a solucao nem for solucao, o valor sera zero.
 			if (viavel(instancia)) {
-				for (Personagem p : listaDeHerois) {
+				for (int i = 0; i < listaDeHerois.size(); i++) {
+					Personagem p  = listaDeHerois.get(i);
 					// soma a colaboracao com os outros herois do time
-					for (Personagem q : listaDeHerois) {
+					for (int j = i; j < listaDeHerois.size(); j++) {
+						Personagem q  = listaDeHerois.get(j);
 						if (p.getId() != q.getId()) {
 							valor += instancia.grafo[p.getId()][q.getId()];
 						}

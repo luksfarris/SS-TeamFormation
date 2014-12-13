@@ -227,13 +227,12 @@ public class ScatterSearch {
 	 * melhor.
 	 * @return a Solucao encontrada. Pode nao ser factivel.
 	 */
-	public Solucao busca () {
+	public Solucao busca (int iteracoes) {
 		populacao.addAll(gerarPopulacao(tamanhoRefSet*10));
 		atualizaConjuntoReferencia();
 		
-		boolean novasSolucoes = true;
-		while (novasSolucoes) {
-			novasSolucoes = false;
+		for (int k=0; k < iteracoes; k++) {
+			System.out.println("Iteração " + k + " - Best: " + refSet.get(refSet.size()-1).valor);
 			List<SubConjunto> subconjuntos = geraSubconjuntos();
 			Iterator<SubConjunto> it = subconjuntos.iterator();
 			while (it.hasNext()) {
@@ -246,8 +245,16 @@ public class ScatterSearch {
 				}
 			}
 			if (atualizaConjuntoReferencia()) {
-				novasSolucoes = true;
+				System.out.println("refset mudou");
 			}
+			// remove os piores elementos
+			Iterator<Solucao> pop = populacao.iterator();
+			while (populacao.size() > 20 * tamanhoRefSet) {
+				pop.next();
+				pop.remove();
+			}
+			// adiciona mais alguns elementos aleatorios
+			populacao.addAll(gerarPopulacao(tamanhoRefSet*2));
 		}
 		if (refSet.size() > 0) {
 			return refSet.get(refSet.size()-1);
