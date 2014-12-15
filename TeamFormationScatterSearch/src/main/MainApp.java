@@ -45,7 +45,7 @@ public class MainApp {
 		
 		Instancia instancia = new Instancia();
 		instancia.budget = Double.MAX_VALUE;
-		int viloes[] = getViloes(1);
+		int viloes[] = getViloes(2);
 		instancia.minHerois = 1;
 		instancia.maxHerois = viloes.length + 1;
 		instancia.viloes = viloes;

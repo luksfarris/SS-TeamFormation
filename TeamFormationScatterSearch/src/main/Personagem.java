@@ -6,7 +6,7 @@ import java.util.Arrays;
  * @author Lucas Farris
  * Classe que representa um heroi.
  */
-public class Personagem {	
+public class Personagem  {	
 	
 	/**Indica se o personagem eh heroi ou vilao. 
 	 * Se for <code>true</code> eh heroi. */
@@ -69,6 +69,15 @@ public class Personagem {
 		this.id = id;
 	}
 	
+	public double getValue(Instancia instancia) {
+		double valor = 0;
+		for (int i = 0;i<instancia.viloes.length;i++){
+			Personagem p = instancia.personagens.get(i);
+			valor += instancia.grafo[getId()][p.getId()];
+		}
+		return valor;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		boolean equal = false;
@@ -78,4 +87,6 @@ public class Personagem {
 		}
 		return equal;
 	}
+	
+
 }
