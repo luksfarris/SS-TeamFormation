@@ -15,8 +15,39 @@ public class Solucao {
 	 * @param instancia instancia do problema com os herois disponiveis.
 	 */
 	public void melhoraSolucao (Instancia instancia) {
-		// TODO: melhora a solucao de algum jeito. Quanto mais inteligente for
+		// melhora a solucao de algum jeito. Quanto mais inteligente for
 		// esse passo, melhor sera o algoritmo.
+		for (Personagem p : listaDeHerois) {
+			
+			ArrayList<Personagem> herois = new ArrayList<Personagem>();
+			for (Personagem q : listaDeHerois) {
+				if (p != q) {
+					herois.add(q);
+				}
+			}
+			
+			for (int i=0; i < instancia.maxHeroIndex; i++) {
+				boolean estaContido = false;
+				Personagem heroi = instancia.personagens.get(i);
+				for (Personagem q : listaDeHerois) {
+					if (q.getId() == heroi.getId()) {
+						estaContido = true;
+					}
+				}
+				if (!estaContido) {
+					// substitui por um novo heroi
+					herois.add(heroi);
+					Solucao s = new Solucao();
+					s.listaDeHerois = herois;
+					if (s.factível(instancia) && s.viavel(instancia) && s.avalia(instancia) > valor){
+						listaDeHerois = herois;
+						return;
+					} else {
+						herois.remove(heroi);
+					}
+				}
+			}
+		}
 	}
 
 	/**
