@@ -116,9 +116,9 @@ public class Solucao {
 		double popularidadeHerois = 0;
 		for (Personagem p : listaDeHerois) {
 			for (int i = 0; i < 6; i++) {
-				powerGridHerois += (p.getPowerGrid()[i] / listaDeHerois.size());
+				powerGridHerois += ((double)p.getPowerGrid()[i] / (double)listaDeHerois.size());
 			}
-			popularidadeHerois += p.getPopularidade() / listaDeHerois.size();
+			popularidadeHerois += p.getPopularidade() / (double)listaDeHerois.size();
 		}
 		double powerGridViloes = 0;
 		double popularidadeViloes = 0;
@@ -129,7 +129,7 @@ public class Solucao {
 				powerGridViloes += ((double) p.getPowerGrid()[i] / (double) instancia.viloes.length);
 				vtCost += (p.getPowerGrid()[i] / 6.0) * p.getPopularidade();
 			}
-			popularidadeViloes += p.getPopularidade() / instancia.viloes.length;
+			popularidadeViloes += p.getPopularidade() / (double)instancia.viloes.length;
 		}
 		double ratioPG = powerGridHerois / powerGridViloes;
 		double ratioPop = popularidadeHerois / popularidadeViloes;
@@ -224,7 +224,7 @@ public class Solucao {
 			}
 			// se a solucao nao for factivel, dividimos o valor por 2
 			if (!factível(instancia)) {
-				valor /= 2;
+				valor = 0;
 			}
 		}
 		return valor;
